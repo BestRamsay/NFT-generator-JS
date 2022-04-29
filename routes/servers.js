@@ -14,9 +14,4 @@ router.post('/api/unconditionalMatch', server.setNewUnconditionalMatchServer)
 router.post('/upload', server.uploadManyImagesServer)
 router.post('/api/nft', server.nftGenerate)
 
-// router.delete('/api/server/:id', remove) 
-
-// router.put() // полностью обновлять элемент
-// router.patch() // частично обновлять элемент
-
 export default router; 
