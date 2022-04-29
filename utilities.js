@@ -10,19 +10,17 @@ export const createXLSX = (AoA, name, path) => {
     let ws_data = AoA;
     let ws = XLSX.utils.aoa_to_sheet(ws_data);
     
-    //const ws = XLSX.utils.json_to_sheet(data);
     XLSX.utils.book_append_sheet(wb, ws, `${name}`);
     
     /* generate an XLSX file */
     XLSX.writeFile(wb, `${name}.xlsx`);
 
-    //TODO: перместить файл в нужную директорию
     fs.rename(`${name}.xlsx`, `${path}/${name}.xlsx`, err => {
         if(err) throw err; // не удалось переместить файл
     });
 }
 
-export const archivingFolder = async (path, name) => { //TODO: повесить на отделную кнопку. На вход получает номер бандла, архивирует его и возвращает юзеру. 
+export const archivingFolder = async (path, name) => { 
     let output = fs.createWriteStream(`${name}.zip`);
     let archive = archiver('zip');
 
@@ -37,10 +35,8 @@ export const archivingFolder = async (path, name) => { //TODO: повесить 
     
     archive.pipe(output);
 
-    // append files from a sub-directory, putting its contents at the root of archive
     archive.directory(path, false);
 
-    // append files from a sub-directory and naming it `new-subdir` within the archive
     archive.directory('subdir/', 'new-subdir');
 
     await archive.finalize();
