@@ -6,9 +6,6 @@ import {imageFilter, archivingFolder} from '../utilities.js'
 import multer from 'multer';
 import fs from 'fs';
 
-
-
-
 mysql_connect.createTables()
 
 export const getTraitTypesServer =  async (req, res) => {
@@ -155,7 +152,6 @@ export const setConflictsServer = async (req, res) => {
         }
         const setStatus = await mysql_connect.setValues('conflicts', ['trait_1_id','trait_2_id', 'trait_substitute'],
         [`${info.trait1}`, `${info.trait2}`, `${info.traitSubstitute - 1}`]) 
-        // вычитается единица т.к.  счет между конфликами идёт с нулевого
         if (setStatus) {
             res.status(201).json(info);
         } else {
@@ -197,15 +193,12 @@ export const uploadManyImagesServer = async (req, res) => {
         console.log('Все папки успешно созданы');
     });
 
-    // 1000 is the limit I've defined for number of uploaded files at once
-    // 'multiple_images' is the name of our file input field
     let upload = multer({ storage: multer.diskStorage({
         destination: function(req, file, cb) {
-            cb(null, `./static/uploads/${newUser}_${newTimeLabel}`); // поменять пути
+            cb(null, `./static/uploads/${newUser}_${newTimeLabel}`); 
         },
-        // By default, multer removes file extensions so let's add them back
         filename: function(req, file, cb) { 
-            cb(null, file.originalname); // поменять имя
+            cb(null, file.originalname);
         }
     }),
     fileFilter: imageFilter }).array('multiple_images', 1000);
@@ -216,6 +209,6 @@ export const uploadManyImagesServer = async (req, res) => {
         }
         const path = `./static/uploads/${newUser}_${newTimeLabel}/`;
         const filesArray = fs.readdirSync(path).filter(file => fs.lstatSync(path+file).isFile())
-        res.status(201).json({'text':'your image has been uploaded', 'bundle':`${newUser}_${newTimeLabel}`, 'images':filesArray});    // в ответе вернуть newUser + дату
+        res.status(201).json({'text':'your image has been uploaded', 'bundle':`${newUser}_${newTimeLabel}`, 'images':filesArray});    
     });
 }
