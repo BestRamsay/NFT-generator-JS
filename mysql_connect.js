@@ -1,17 +1,16 @@
 import mysql from "mysql2";
 import { setTimeout } from 'timers/promises';
 
-export let traitProbability = {}; // объект внутри которого трейты  с вероятностями trait:[title],[probability]
+export let traitProbability = {}; // trait:[title],[probability]
 export let traits;
 export let conflicts;
 export let unconditionalMatches;
 let titleProbability;
-// TODO:добавить проверки!!!!!!!!!!!!!!!!!
-const getTraitProbability = async () => { // на вход должен получать фильтр для таблиц
+const getTraitProbability = async () => { 
     try {
         const createConnection = () => {
             return mysql.createConnection({
-                host: "database-2.clua1x1ptzge.us-east-1.rds.amazonaws.com", //тут будет другой адрес: 127.0.0.1
+                host: "database-2.clua1x1ptzge.us-east-1.rds.amazonaws.com",
                 user: "admin",
                 database: "rts_mysql_base",
                 password: "11111111"
@@ -37,14 +36,12 @@ const getTraitProbability = async () => { // на вход должен полу
                 connection.query(queryTitleProb, function(err, result) {
                     if (err) throw err;
                     titleProbability = result;
-                    //console.log(titleProbability);
                 });
     
                 const queryConflicts = "SELECT * FROM conflicts";
                 connection.query(queryConflicts, function(err, result) {
                     if (err) throw err;
                     conflicts = result;
-                    //console.log(conflicts);
                 });
     
                 const queryUnconditionalMatches = "SELECT * FROM unconditional_matches";
@@ -83,7 +80,7 @@ export const getConflicts = () =>{ // счет в титлах идет с ну�
     return computeConflicts;
 }
 
-export const getUnconditionalMatches = () =>{ // счет в титлах идет с нуля , поэтому -1
+export const getUnconditionalMatches = () =>{
     let computeUnconditionalMatches = [];
 
     for (let index = 0; index  < unconditionalMatches.length; index++) { // {trait_1: title, trait_2: title }.
@@ -100,7 +97,7 @@ export const getUnconditionalMatches = () =>{ // счет в титлах иде
 
 export const requestData = async () => {
     try {
-        await getTraitProbability(); // проверят состояние
+        await getTraitProbability(); 
         const result = await setTimeout(2000, ''); 
 
         for (let i = 0; i < traits.length; i += 1){
@@ -133,16 +130,11 @@ export const createTables = async() => {
     try {
         const createConnection = () => {
             return mysql.createConnection({
-                host: "database-2.clua1x1ptzge.us-east-1.rds.amazonaws.com",
-                user: "admin",
-                database: "rts_mysql_base",
-                password: "11111111"
             });
         };
     
         const connection = await createConnection();
     
-        //здесь должны быть ${} с именами INDEX, и таблиц
         const queryCreateTraitTypes = `CREATE TABLE if not exists traittypes ( 
             id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
             title VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci', 
@@ -158,7 +150,6 @@ export const createTables = async() => {
             else console.log("Таблица создана traittypes");
         });
     
-        //здесь должны быть ${} с именами INDEX, и таблиц
         const queryCreateTraitsTitle = `CREATE TABLE  if not exists traits ( 
             id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
             traittype_id BIGINT(20) UNSIGNED NULL DEFAULT NULL, 
@@ -178,7 +169,6 @@ export const createTables = async() => {
             else console.log("Таблица создана traits");
         });
     
-        //здесь должны быть ${} с именами INDEX, и таблиц
         const queryCreateConflicts = `CREATE TABLE if not exists  conflicts (
             id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             trait_1_id BIGINT(20) UNSIGNED NULL DEFAULT NULL,
@@ -200,7 +190,6 @@ export const createTables = async() => {
             else console.log("Таблица создана conflicts");
         });
     
-        //здесь должны быть ${} с именами INDEX, и таблиц
         const queryCreateUnconditionalMatches = `CREATE TABLE if not exists  unconditional_matches (
             id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             trait_id BIGINT(20) UNSIGNED NULL,
@@ -218,7 +207,7 @@ export const createTables = async() => {
         ;`;
         connection.query(queryCreateUnconditionalMatches, function(err, results) {
             if(err) console.log(err);
-            else console.log("Таблица создана unconditional_matches");
+            else console.log(" unconditional_matches");
         });
     
         //здесь должны быть ${} с именами INDEX, и таблиц
@@ -236,7 +225,7 @@ export const createTables = async() => {
         `;
         connection.query(queryCreateBundles, function(err, results) {
             if(err) console.log(err);
-            else console.log("Таблица создана bundles");
+            else console.log("bundles");
         });
     
         connection.end();
@@ -250,10 +239,6 @@ export const setValues = async (table, сolumns, values) => {
     try {
         const createConnection = () => {
             return mysql.createConnection({
-                host: "database-2.clua1x1ptzge.us-east-1.rds.amazonaws.com",
-                user: "admin",
-                database: "rts_mysql_base",
-                password: "11111111"
             });
         };
     
@@ -266,7 +251,6 @@ export const setValues = async (table, сolumns, values) => {
         connection.query(querySet, function(err, results) {
             if(err) {
                 console.log(err);
-                //connection.end();
                 return false;
             }
             console.log(results);
