@@ -18,7 +18,7 @@ async function requests(url, method = 'GET', data = null) {
     }
 }
 
-async function getTraitTypes(){ // надо ли куда-то возвращать и принимать переменные? 
+async function getTraitTypes(){ 
     const traits = await requests('/api/traittypes');
     console.log(traits);
     return traits;
@@ -37,10 +37,9 @@ async function getTraits(){
 }
 
 async function setNewTrait(){
-    const trait = document.getElementById("textTitleTrait").value; // ТУТ обязательно должно быть число - номер трейта
+    const trait = document.getElementById("textTitleTrait").value; 
     const title = document.getElementById("textTitleName").value;
     const probability = document.getElementById("textTitleProbaility").value;
-    //должна быть проверка на пустоту всех полей. Если что-то пустое, abort операции.
 
     const data = await requests('/api/traits', 'POST', {trait: Number(trait), title: title, probability: Number(probability)})
     console.log(data);
@@ -57,8 +56,6 @@ async function setNewConflict(){
     const trait2 = document.getElementById("textConflictTrait2").value
     const traitSubstitute = document.getElementById("textConflictTraitSubstitute").value
 
-    //если что-то пусто - abort операции.
-
     const data = await requests('/api/conflicts', 'POST', {trait1: Number(trait1),
                                                            trait2: Number(trait2),
                                                            traitSubstitute: Number(traitSubstitute)}) 
@@ -72,9 +69,8 @@ async function getUnconditionalMatch(){
 }
 
 async function setNewUnconditionalMatch(){
-    const trait = document.getElementById("textUnconditionalMatchtTrait1").value; // ТУТ обязательно должно быть число - номер трейта
+    const trait = document.getElementById("textUnconditionalMatchtTrait1").value; 
     const unconditionalMatch = document.getElementById("textUnconditionalMatchTrait2").value;
-    //должна быть проверка на пустоту всех полей. Если что-то пустое, abort операции.
 
     const data = await requests('/api/unconditionalMatch', 'POST', {trait: Number(trait), unconditionalMatch: Number(unconditionalMatch)})
     console.log(data);
